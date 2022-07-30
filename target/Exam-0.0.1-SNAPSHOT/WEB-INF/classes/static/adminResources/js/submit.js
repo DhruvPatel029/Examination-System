@@ -1,0 +1,38 @@
+var jsonObject = [];
+
+$('#insertExamForm').submit(function(){
+	swal({
+	    title: "Are you sure want to submit?",
+	    text: "Only selected answers will be count",
+	    icon: "warning",
+	    buttons: true,
+	    dangerMode: true,
+	})
+	.then((willSubmit) => {
+	    if (willSubmit) {
+	    	$('[id^=selectedAns]:checked').each(function(){
+	    		let item = {};
+	    		item['questionId'] = $(this).parent().find('#question').find('#questionId').val();
+	    		item['optionSelected'] = $(this).val();
+	    		
+	    		jsonObject.push(item);
+	    	});
+
+	    	    $.ajax({
+	    	        type: "POST",
+	    	        url: "submitExam",
+	    	        contentType: 'application/json',
+	    	        data: JSON.stringify(jsonObject),
+	    	        async: false,
+	    	        success: function(response) {
+	    	           window.location.href= "index";
+	    	        },
+	    	    });
+	    } else {
+	    	return false;
+	    }
+	});
+	return false;
+});
+
+
